@@ -39,7 +39,7 @@ app.use('/rooms', require('./routes/rooms'));
 app.use('/bookings', require('./routes/bookings'));
 app.use('/equipment', require('./routes/equipment'));
 
-app.use('/export', require('./routes/exportCSV'));
+app.use('/export', require('./routes/exportCsv'));
 app.use('/export', require('./routes/exportPdf'));
 
 app.use('/statistics', require('./routes/stats'));
