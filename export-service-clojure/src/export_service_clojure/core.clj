@@ -5,28 +5,22 @@
    [compojure.route :as route]
    [ring.middleware.json :refer [wrap-json-body wrap-json-response]]
 
-   ;; Export routes
    [export-service-clojure.routes.export-routes
     :refer [export-routes]])
   (:gen-class))
 
 
-
 (defroutes app-routes
 
-  ;; Export endpoints
   export-routes
 
-  ;; Health check
   (GET "/health" []
     {:status 200
      :body {:message "Export microservice works"}})
 
-  ;; 404
   (route/not-found
    {:status 404
     :body {:error "Route not found"}}))
-
 
 
 (def app
@@ -38,8 +32,14 @@
 (defn -main
   []
 
-  (println "Export microservice running on port 5001")
+  (let [port
+        (Integer/parseInt
+         (or (System/getenv "PORT")
+             "5001"))]
 
-  (run-jetty app
-             {:port 5001
-              :join? false}))
+    (println
+     (str "Export microservice running on port " port))
+
+    (run-jetty app
+               {:port port
+                :join? false})))
