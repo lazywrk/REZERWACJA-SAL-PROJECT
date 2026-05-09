@@ -1,5 +1,5 @@
 const { sql } = require('../db');
-const { roomDTO } = require('../dto/roomDTO');
+const { roomDTO } = require('../DTO/roomDTO');
 const { buildRoomCalendar } = require('../utils/calendarUtils');
 const { getRoomStatus } = require('../utils/bookingUtils');
 
