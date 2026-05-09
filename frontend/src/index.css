@@ -1,0 +1,83 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root{
+  color-scheme: dark;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  margin:0;
+  font-family:Inter,sans-serif;
+  min-height:100vh;
+  overflow-x:hidden;
+
+  background:
+    radial-gradient(circle at top,
+      rgba(59,130,246,0.18),
+      transparent 30%),
+
+    radial-gradient(circle at right,
+      rgba(6,182,212,0.12),
+      transparent 25%),
+
+    #020617;
+
+  color:#f8fafc;
+}
+
+#root{
+  min-height:100vh;
+  background:#020617;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+::-webkit-scrollbar{
+  width:10px;
+}
+
+::-webkit-scrollbar-track{
+  background:#020617;
+}
+
+::-webkit-scrollbar-thumb{
+  background:#1e293b;
+  border-radius:999px;
+}
+
+::-webkit-scrollbar-thumb:hover{
+  background:#334155;
+}
+
+button,
+input,
+select,
+textarea{
+  transition:all .2s ease;
+}
+
+.glass{
+  background:rgba(15,23,42,.72);
+  backdrop-filter:blur(18px);
+  border:1px solid rgba(148,163,184,.12);
+}
+
+.glow{
+  box-shadow:
+    0 0 40px rgba(59,130,246,.18);
+}
+
+.grid-glow{
+  background-image:
+    linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+
+  background-size:40px 40px;
+}

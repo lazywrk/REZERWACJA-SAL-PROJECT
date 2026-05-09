@@ -1,0 +1,27 @@
+# Node.js
+node_modules/
+
+# Environment variables
+.env
+.env.local
+
+# Clojure
+target/
+.lsp/
+.clj-kondo/
+.lein-repl-history
+.nrepl-port
+
+# Logs
+*.log
+
+# MacOS
+.DS_Store
+
+# Temporary / cache
+dbtransit.json
+bookings-report.pdf
+
+# Hidden secret files
+.inv*
+INV*
