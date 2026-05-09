@@ -10,7 +10,7 @@ const config = {
 
     options: {
         encrypt: true,
-        trustServerCertificate: false
+        trustServerCertificate: true
     },
 
     pool: {
@@ -22,15 +22,19 @@ const config = {
 
 let pool = null;
 
-async function connectDB() {
+async function connectDB(retries = 5) {
+
     try {
-        if (pool) return pool;
+
+        if (pool) {
+            return pool;
+        }
 
         console.log('Łączenie z Azure SQL...');
 
         pool = await sql.connect(config);
 
-        // FORCE REAL CONNECTION TEST
+        // REAL CONNECTION TEST
         await pool.request().query('SELECT 1');
 
         console.log('Połączono z Azure SQL');
@@ -38,12 +42,31 @@ async function connectDB() {
         return pool;
 
     } catch (err) {
-        console.error('Błąd połączenia z bazą danych:', err);
+
+        console.error(
+            'Błąd połączenia z bazą danych:',
+            err.message
+        );
+
+        if (retries > 0) {
+
+            console.log(
+                `Ponowna próba połączenia... (${retries} pozostało)`
+            );
+
+            await new Promise(resolve =>
+                setTimeout(resolve, 5000)
+            );
+
+            return connectDB(retries - 1);
+        }
+
         throw err;
     }
 }
 
 function getPool() {
+
     if (!pool) {
         throw new Error('DB not initialized');
     }
