@@ -1,52 +1,61 @@
 import axios from "axios";
 
+const BASE_URL =
+  window.location.hostname === "localhost"
+    ? "http://localhost:3000"
+    : "https://rezerwacja-backend.onrender.com";
+
 const api = axios.create({
- baseURL: "http://localhost:3000",
- headers: {
-   "Content-Type": "application/json"
- }
+  baseURL: BASE_URL,
+
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
 
 
 api.interceptors.request.use(
- (config) => {
+  (config) => {
 
-   const token =
-    localStorage.getItem(
-      "token"
-    );
+    const token =
+      localStorage.getItem(
+        "token"
+      );
 
-   if(token){
+    if (token) {
+
       config.headers.Authorization =
-       `Bearer ${token}`;
-   }
+        `Bearer ${token}`;
+    }
 
-   return config;
- },
- (error) => Promise.reject(error)
+    return config;
+  },
+
+  (error) => Promise.reject(error)
 );
 
 
 
 api.interceptors.response.use(
- (response)=>response,
+  (response) => response,
 
- (error)=>{
+  (error) => {
 
-   if(
-    error.response?.status===401
-   ){
+    if (
+      error.response?.status === 401
+    ) {
+
       localStorage.removeItem(
         "token"
       );
 
-      window.location.href=
+      window.location.href =
         "/login";
-   }
+    }
 
-   return Promise.reject(error);
- }
+    return Promise.reject(error);
+  }
 );
 
 
