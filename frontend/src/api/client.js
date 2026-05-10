@@ -1,16 +1,11 @@
 import axios from "axios";
 
-const BASE_URL =
-  window.location.hostname === "localhost"
-    ? "http://localhost:3000"
-    : "https://rezerwacja-backend.onrender.com";
-
 const api = axios.create({
-  baseURL: BASE_URL,
+  baseURL: "https://rezerwacja-backend.onrender.com",
 
   headers: {
-    "Content-Type": "application/json",
-  },
+    "Content-Type": "application/json"
+  }
 });
 
 
