@@ -1,73 +1,83 @@
 const express = require('express');
 const router = express.Router();
+
 const axios = require('axios');
 
 const { sql } = require('../db');
 
-const authMiddleware = require('../middleware/authMiddleware');
-const roleMiddleware = require('../middleware/roleMiddleware');
+const authMiddleware =
+  require('../middleware/authMiddleware');
+
+const roleMiddleware =
+  require('../middleware/roleMiddleware');
+
+const EXPORT_SERVICE_URL =
+  process.env.EXPORT_SERVICE_URL ||
+  'http://localhost:5001';
+
+
 
 // CSV export
 router.get(
-    '/bookings/csv',
-    authMiddleware,
-    roleMiddleware('admin'),
+  '/bookings/csv',
 
-    async (req, res) => {
+  authMiddleware,
 
-        try {
+  roleMiddleware('admin'),
 
-      
+  async (req, res) => {
 
-            const result = await sql.query(`
-                SELECT
-                    b.id,
-                    u.email AS user_email,
-                    r.name AS room_name,
-                    b.start_time,
-                    b.end_time,
-                    b.status
-                FROM bookings b
-                JOIN users u ON b.user_id = u.id
-                JOIN rooms r ON b.room_id = r.id
-                ORDER BY b.start_time DESC
-            `);
+    try {
 
-            const response = await axios.post(
-                'http://localhost:5001/export/csv',
+      const result = await sql.query(`
+        SELECT
+          b.id,
+          u.email AS user_email,
+          r.name AS room_name,
+          b.start_time,
+          b.end_time,
+          b.status
+        FROM bookings b
+        JOIN users u ON b.user_id = u.id
+        JOIN rooms r ON b.room_id = r.id
+        ORDER BY b.start_time DESC
+      `);
 
-                {
-                    bookings: result.recordset
-                },
+      const response =
+        await axios.post(
 
-                {
-                    responseType: 'arraybuffer'
-                }
-            );
+          `${EXPORT_SERVICE_URL}/export/csv`,
 
-         
+          {
+            bookings: result.recordset
+          },
 
-            res.setHeader(
-                'Content-Type',
-                'text/csv'
-            );
+          {
+            responseType: 'arraybuffer'
+          }
+        );
 
-            res.setHeader(
-                'Content-Disposition',
-                'attachment; filename=bookings.csv'
-            );
+      res.setHeader(
+        'Content-Type',
+        'text/csv'
+      );
 
-            res.send(response.data);
+      res.setHeader(
+        'Content-Disposition',
+        'attachment; filename=bookings.csv'
+      );
 
-        } catch (err) {
+      res.send(response.data);
 
-            console.log(err);
+    } catch (err) {
 
-            res.status(500).json({
-                error: 'Błąd eksportu CSV'
-            });
-        }
+      console.log(err);
+
+      res.status(500).json({
+        error: 'Błąd eksportu CSV'
+      });
     }
+  }
 );
 
 module.exports = router;
